@@ -16,7 +16,7 @@ $app->post('/token', function() use($app) {
   $app->response()->headers()->set('Content-Type', 'application/x-www-form-urlencoded');
 
   $params = $req->params();
-  
+
   // the "me" parameter is user input, and may be in a couple of different forms:
   // aaronparecki.com http://aaronparecki.com http://aaronparecki.com/
   // Normlize the value now (move this into a function in IndieAuth\Client later)
@@ -90,7 +90,7 @@ $app->get('/token', function() use($app) {
 
   $tokenString = false;
   $error_description = false;
-  
+
   $authHeader = $app->request()->headers()->get('Authorization');
   if(preg_match('/Bearer (.+)/', $authHeader, $match)) {
     $tokenString = $match[1];
