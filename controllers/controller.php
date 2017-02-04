@@ -28,6 +28,8 @@ $app->post('/token', function() use($app) {
     return;
   }
 
+  error_log($me);
+
   // Try to discover the authorization endpoint for this user
   $authorizationEndpoint = IndieAuth\Client::discoverAuthorizationEndpoint($me);
 
