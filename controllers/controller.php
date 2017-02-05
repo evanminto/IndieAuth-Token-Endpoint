@@ -19,7 +19,6 @@ $app->post('/token', function() use($app) {
 
   // the "me" parameter is user input, and may be in a couple of different forms:
   // aaronparecki.com http://aaronparecki.com http://aaronparecki.com/
-  // Normlize the value now (move this into a function in IndieAuth\Client later)
   if(!array_key_exists('me', $params) || !($me = IndieAuth\Client::normalizeMeURL($params['me']))) {
     $app->response()->body(http_build_query(array(
       'error' => 'invalid_parameter',
