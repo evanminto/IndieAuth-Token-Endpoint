@@ -16,11 +16,11 @@ $app->post('/token', function() use($app) {
   $app->response()->headers()->set('Content-Type', 'application/x-www-form-urlencoded');
 
   $params = $req->params();
-  
+
   // the "me" parameter is user input, and may be in a couple of different forms:
   // aaronparecki.com http://aaronparecki.com http://aaronparecki.com/
   // Normlize the value now (move this into a function in IndieAuth\Client later)
-  if(!array_key_exists('me', $params) || !($me = normalizeMeURL($params['me']))) {
+  if(!array_key_exists('me', $params) || !($me = IndieAuth\Client::normalizeMeURL($params['me']))) {
     $app->response()->body(http_build_query(array(
       'error' => 'invalid_parameter',
       'error_description' => 'The "me" parameter provided was not valid'
@@ -57,7 +57,7 @@ $app->post('/token', function() use($app) {
       'scope' => k($auth, 'scope', ''),
       'nonce' => mt_rand(1000000,pow(2,30))
     );
-    $token = JWT::encode($token_data, Config::$jwtKey);
+    $token = Firebase\JWT\JWT::encode($token_data, Config::$jwtKey);
 
     $app->response()->body(http_build_query(array(
       'me' => $auth['me'],
@@ -90,7 +90,7 @@ $app->get('/token', function() use($app) {
 
   $tokenString = false;
   $error_description = false;
-  
+
   $authHeader = $app->request()->headers()->get('Authorization');
   if(preg_match('/Bearer (.+)/', $authHeader, $match)) {
     $tokenString = $match[1];
@@ -98,7 +98,7 @@ $app->get('/token', function() use($app) {
 
   if($tokenString) {
     try {
-      $token = JWT::decode($tokenString, Config::$jwtKey);
+      $token = Firebase\JWT\JWT::decode($tokenString, Config::$jwtKey);
     } catch(Exception $e) {
       $token = false;
       $error_description = 'The token provided was malformed';
