@@ -57,7 +57,7 @@ $app->post('/token', function() use($app) {
       'scope' => k($auth, 'scope', ''),
       'nonce' => mt_rand(1000000,pow(2,30))
     );
-    $token = JWT::encode($token_data, $_ENV['INDIEAUTH_JWTKEY']);
+    $token = Firebase\JWT\JWT::encode($token_data, $_ENV['INDIEAUTH_JWTKEY']);
 
     $app->response()->body(http_build_query(array(
       'me' => $auth['me'],
@@ -98,7 +98,7 @@ $app->get('/token', function() use($app) {
 
   if($tokenString) {
     try {
-      $token = JWT::decode($tokenString, $_ENV['INDIEAUTH_JWTKEY']);
+      $token = Firebase\JWT\JWT::decode($tokenString, $_ENV['INDIEAUTH_JWTKEY']);
     } catch(Exception $e) {
       $token = false;
       $error_description = 'The token provided was malformed';
